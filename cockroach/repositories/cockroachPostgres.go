@@ -1,7 +1,7 @@
 package repositories
 
 import (
-	"github.com/Rayato159/go-clean-arch-v2/cockroach/repositories/entities"
+	"github.com/Rayato159/go-clean-arch-v2/cockroach/entities"
 	"gorm.io/gorm"
 )
 

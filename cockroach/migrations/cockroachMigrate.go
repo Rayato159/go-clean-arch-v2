@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/Rayato159/go-clean-arch-v2/cockroach/repositories/entities"
+	"github.com/Rayato159/go-clean-arch-v2/cockroach/entities"
 	"github.com/Rayato159/go-clean-arch-v2/config"
 	"github.com/Rayato159/go-clean-arch-v2/database"
 )
