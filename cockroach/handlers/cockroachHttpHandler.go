@@ -10,6 +10,12 @@ type cockroachHttpHandler struct {
 	cockroachUsecase usecases.CockroachUsecase
 }
 
+func NewCockroachHttpHandler(cockroachUsecase usecases.CockroachUsecase) CockroachHandler {
+	return &cockroachHttpHandler{
+		cockroachUsecase: cockroachUsecase,
+	}
+}
+
 func (h *cockroachHttpHandler) DetectCockroach(c echo.Context) error {
 	return nil
 }

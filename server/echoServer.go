@@ -2,8 +2,10 @@ package server
 
 import (
 	"fmt"
-	"net/http"
 
+	"github.com/Rayato159/go-clean-arch-v2/cockroach/handlers"
+	cockroachRepositories "github.com/Rayato159/go-clean-arch-v2/cockroach/repositories"
+	cockroachUsecases "github.com/Rayato159/go-clean-arch-v2/cockroach/usecases"
 	"github.com/Rayato159/go-clean-arch-v2/config"
 	"github.com/labstack/echo/v4"
 	"gorm.io/gorm"
@@ -24,10 +26,25 @@ func NewEchoServer(cfg *config.Config, db *gorm.DB) Server {
 }
 
 func (s *echoServer) Start() {
-	s.app.GET("/", func(c echo.Context) error {
-		return c.String(http.StatusOK, "Hello, World!")
-	})
+	s.initializeCockroachHttpHandler()
 
 	serverUrl := fmt.Sprintf(":%d", s.cfg.App.Port)
 	s.app.Logger.Fatal(s.app.Start(serverUrl))
+}
+
+func (s *echoServer) initializeCockroachHttpHandler() {
+	// Initialize all layers
+	cockroachPostgresRepository := cockroachRepositories.NewCockroachPostgresRepository(s.db)
+	cockroachFCMMessaging := cockroachRepositories.NewCockroachFCMMessaging()
+
+	cockroachUsecase := cockroachUsecases.NewCockroachUsecaseImpl(
+		cockroachPostgresRepository,
+		cockroachFCMMessaging,
+	)
+
+	cockroachHttpHandler := handlers.NewCockroachHttpHandler(cockroachUsecase)
+
+	// Routers
+	cockroachRouters := s.app.Group("/cockroach")
+	cockroachRouters.POST("/", cockroachHttpHandler.DetectCockroach)
 }
