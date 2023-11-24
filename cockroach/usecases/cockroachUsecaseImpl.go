@@ -20,6 +20,6 @@ func NewCockroachUsecaseImpl(
 	}
 }
 
-func (u *cockroachUsecaseImpl) CockroachDataManaging(in *models.AddCockroachData) error {
+func (u *cockroachUsecaseImpl) CockroachDataProcessing(in *models.AddCockroachData) error {
 	return nil
 }
