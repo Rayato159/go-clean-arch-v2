@@ -3,7 +3,7 @@ package server
 import (
 	"fmt"
 
-	"github.com/Rayato159/go-clean-arch-v2/cockroach/handlers"
+	cockroachHandlers "github.com/Rayato159/go-clean-arch-v2/cockroach/handlers"
 	cockroachRepositories "github.com/Rayato159/go-clean-arch-v2/cockroach/repositories"
 	cockroachUsecases "github.com/Rayato159/go-clean-arch-v2/cockroach/usecases"
 	"github.com/Rayato159/go-clean-arch-v2/config"
@@ -42,7 +42,7 @@ func (s *echoServer) initializeCockroachHttpHandler() {
 		cockroachFCMMessaging,
 	)
 
-	cockroachHttpHandler := handlers.NewCockroachHttpHandler(cockroachUsecase)
+	cockroachHttpHandler := cockroachHandlers.NewCockroachHttpHandler(cockroachUsecase)
 
 	// Routers
 	cockroachRouters := s.app.Group("/cockroach")
