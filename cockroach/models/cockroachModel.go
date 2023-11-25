@@ -1,7 +1,5 @@
 package models
 
-type (
-	AddCockroachData struct {
-		Amount uint32 `json:"amount"`
-	}
-)
+type AddCockroachData struct {
+	Amount uint32 `json:"amount"`
+}
