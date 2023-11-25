@@ -11,9 +11,9 @@ func NewCockroachFCMMessaging() CockroachMessaging {
 	return &cockroachFCMMessaging{}
 }
 
-func (c *cockroachFCMMessaging) PushNotification(m entities.CockroachPushNotificationDto) error {
+func (c *cockroachFCMMessaging) PushNotification(m *entities.CockroachPushNotificationDto) error {
 	// ... handle logic to push FCM notification here ...
-	log.Info("Pushing notification to FCM")
+	log.Debugf("Pushed FCM notification with data: %v", m)
 
 	return nil
 }

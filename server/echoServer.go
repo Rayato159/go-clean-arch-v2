@@ -8,6 +8,7 @@ import (
 	cockroachUsecases "github.com/Rayato159/go-clean-arch-v2/cockroach/usecases"
 	"github.com/Rayato159/go-clean-arch-v2/config"
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"gorm.io/gorm"
 )
 
@@ -28,6 +29,8 @@ func NewEchoServer(cfg *config.Config, db *gorm.DB) Server {
 func (s *echoServer) Start() {
 	s.initializeCockroachHttpHandler()
 
+	s.app.Use(middleware.Logger())
+
 	serverUrl := fmt.Sprintf(":%d", s.cfg.App.Port)
 	s.app.Logger.Fatal(s.app.Start(serverUrl))
 }
@@ -45,6 +48,6 @@ func (s *echoServer) initializeCockroachHttpHandler() {
 	cockroachHttpHandler := cockroachHandlers.NewCockroachHttpHandler(cockroachUsecase)
 
 	// Routers
-	cockroachRouters := s.app.Group("/cockroach")
-	cockroachRouters.POST("/", cockroachHttpHandler.DetectCockroach)
+	cockroachRouters := s.app.Group("v1/cockroach")
+	cockroachRouters.POST("", cockroachHttpHandler.DetectCockroach)
 }
