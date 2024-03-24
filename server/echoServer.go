@@ -9,29 +9,34 @@ import (
 	"github.com/Rayato159/go-clean-arch-v2/config"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/labstack/gommon/log"
 	"gorm.io/gorm"
 )
 
 type echoServer struct {
-	app *echo.Echo
-	db  *gorm.DB
-	cfg *config.Config
+	app  *echo.Echo
+	db   *gorm.DB
+	conf *config.Config
 }
 
-func NewEchoServer(cfg *config.Config, db *gorm.DB) Server {
+func NewEchoServer(conf *config.Config, db *gorm.DB) Server {
+	echoApp := echo.New()
+	echoApp.Logger.SetLevel(log.DEBUG)
+
 	return &echoServer{
-		app: echo.New(),
-		db:  db,
-		cfg: cfg,
+		app:  echoApp,
+		db:   db,
+		conf: conf,
 	}
 }
 
 func (s *echoServer) Start() {
-	s.initializeCockroachHttpHandler()
-
+	s.app.Use(middleware.Recover())
 	s.app.Use(middleware.Logger())
 
-	serverUrl := fmt.Sprintf(":%d", s.cfg.App.Port)
+	s.initializeCockroachHttpHandler()
+
+	serverUrl := fmt.Sprintf(":%d", s.conf.Server.Port)
 	s.app.Logger.Fatal(s.app.Start(serverUrl))
 }
 

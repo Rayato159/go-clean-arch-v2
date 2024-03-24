@@ -7,9 +7,9 @@ import (
 )
 
 func main() {
-	cfg := config.GetConfig()
+	conf := config.GetConfig()
 
-	db := database.NewPostgresDatabase(&cfg)
+	db := database.NewPostgresDatabase(conf)
 
 	cockroachMigrate(db)
 }

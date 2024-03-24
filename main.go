@@ -7,9 +7,9 @@ import (
 )
 
 func main() {
-	cfg := config.GetConfig()
+	conf := config.GetConfig()
 
-	db := database.NewPostgresDatabase(&cfg)
+	db := database.NewPostgresDatabase(conf)
 
-	server.NewEchoServer(&cfg, db.GetDb()).Start()
+	server.NewEchoServer(conf, db.GetDb()).Start()
 }

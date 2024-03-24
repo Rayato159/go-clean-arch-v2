@@ -1,18 +1,19 @@
 package config
 
 import (
-	"fmt"
+	"strings"
+	"sync"
 
 	"github.com/spf13/viper"
 )
 
 type (
 	Config struct {
-		App App
-		Db  Db
+		Server *Server
+		Db     *Db
 	}
 
-	App struct {
+	Server struct {
 		Port int
 	}
 
@@ -27,28 +28,27 @@ type (
 	}
 )
 
-func GetConfig() Config {
-	viper.SetConfigName("config")
-	viper.SetConfigType("yaml")
-	viper.AddConfigPath("./")
+var (
+	once           sync.Once
+	configInstance *Config
+)
 
-	err := viper.ReadInConfig()
-	if err != nil {
-		panic(fmt.Errorf("fatal error config file: %v", err))
-	}
+func GetConfig() *Config {
+	once.Do(func() {
+		viper.SetConfigName("config")
+		viper.SetConfigType("yaml")
+		viper.AddConfigPath("./")
+		viper.AutomaticEnv()
+		viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
-	return Config{
-		App: App{
-			Port: viper.GetInt("app.server.port"),
-		},
-		Db: Db{
-			Host:     viper.GetString("database.host"),
-			Port:     viper.GetInt("database.port"),
-			User:     viper.GetString("database.user"),
-			Password: viper.GetString("database.password"),
-			DBName:   viper.GetString("database.dbname"),
-			SSLMode:  viper.GetString("database.sslmode"),
-			TimeZone: viper.GetString("database.timezone"),
-		},
-	}
+		if err := viper.ReadInConfig(); err != nil {
+			panic(err)
+		}
+
+		if err := viper.Unmarshal(&configInstance); err != nil {
+			panic(err)
+		}
+	})
+
+	return configInstance
 }
