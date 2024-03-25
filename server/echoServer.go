@@ -7,19 +7,19 @@ import (
 	cockroachRepositories "github.com/Rayato159/go-clean-arch-v2/cockroach/repositories"
 	cockroachUsecases "github.com/Rayato159/go-clean-arch-v2/cockroach/usecases"
 	"github.com/Rayato159/go-clean-arch-v2/config"
+	"github.com/Rayato159/go-clean-arch-v2/database"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/labstack/gommon/log"
-	"gorm.io/gorm"
 )
 
 type echoServer struct {
 	app  *echo.Echo
-	db   *gorm.DB
+	db   database.Database
 	conf *config.Config
 }
 
-func NewEchoServer(conf *config.Config, db *gorm.DB) Server {
+func NewEchoServer(conf *config.Config, db database.Database) Server {
 	echoApp := echo.New()
 	echoApp.Logger.SetLevel(log.DEBUG)
 
@@ -33,6 +33,10 @@ func NewEchoServer(conf *config.Config, db *gorm.DB) Server {
 func (s *echoServer) Start() {
 	s.app.Use(middleware.Recover())
 	s.app.Use(middleware.Logger())
+
+	s.app.GET("v1/health", func(c echo.Context) error {
+		return c.String(200, "OK")
+	})
 
 	s.initializeCockroachHttpHandler()
 

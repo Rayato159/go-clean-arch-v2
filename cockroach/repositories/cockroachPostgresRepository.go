@@ -2,15 +2,15 @@ package repositories
 
 import (
 	"github.com/Rayato159/go-clean-arch-v2/cockroach/entities"
+	"github.com/Rayato159/go-clean-arch-v2/database"
 	"github.com/labstack/gommon/log"
-	"gorm.io/gorm"
 )
 
 type cockroachPostgresRepository struct {
-	db *gorm.DB
+	db database.Database
 }
 
-func NewCockroachPostgresRepository(db *gorm.DB) CockroachRepository {
+func NewCockroachPostgresRepository(db database.Database) CockroachRepository {
 	return &cockroachPostgresRepository{db: db}
 }
 
@@ -19,7 +19,7 @@ func (r *cockroachPostgresRepository) InsertCockroachData(in *entities.InsertCoc
 		Amount: in.Amount,
 	}
 
-	result := r.db.Create(data)
+	result := r.db.GetDb().Create(data)
 
 	if result.Error != nil {
 		log.Errorf("InsertCockroachData: %v", result.Error)
