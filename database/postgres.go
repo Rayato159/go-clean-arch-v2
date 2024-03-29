@@ -43,5 +43,5 @@ func NewPostgresDatabase(conf *config.Config) Database {
 }
 
 func (p *postgresDatabase) GetDb() *gorm.DB {
-	return p.Db
+	return dbInstance.Db
 }
