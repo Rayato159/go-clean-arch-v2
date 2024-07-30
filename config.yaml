@@ -1,7 +1,7 @@
 server:
   port: 8080
   
-database:
+db:
   host: localhost
   port: 5432
   user: postgres
